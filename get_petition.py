@@ -7,6 +7,7 @@ from time import sleep
 request_url = 'https://api.change.org/v1/petitions'
 parser = argparse.ArgumentParser(description='Running this script with an id as argument wil return the petition associated with that id')
 parser.add_argument('petition_id', nargs = '?', default = [i for i in range(5000000,5005000)]  )
+parser.add_argument('-save_path', help = 'Path to save the petitions fetched')
 args = parser.parse_args()
 
 
@@ -45,4 +46,6 @@ if __name__ == '__main__' :
     res = get_petitions_from_ids(args.petition_id)
     for i in res :
         print(i['petitions'])
-        out_res.append(i)
+        out_res += i['petitions']
+    with open(args.save_path, 'w') as savefile :
+        savefile.writelines([str(petition) for petition in out_res])
